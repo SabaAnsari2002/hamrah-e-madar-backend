@@ -13,6 +13,13 @@ def env_list(name: str, default: str) -> list[str]:
     return [item.strip() for item in os.getenv(name, default).split(",") if item.strip()]
 
 
+def env_int(name: str, default: int) -> int:
+    try:
+        return int(os.getenv(name, str(default)).strip())
+    except (TypeError, ValueError):
+        return default
+
+
 DEBUG = env_bool("DEBUG", True)
 SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-development-key-only")
 ALLOWED_HOSTS = env_list(
@@ -40,6 +47,8 @@ INSTALLED_APPS = [
     "apps.reminders",
     "apps.audit",
     "apps.dashboard",
+    "apps.subscriptions",
+    "apps.cms",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -54,7 +63,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -73,6 +82,7 @@ TIME_ZONE = "Asia/Tehran"
 USE_I18N = True
 USE_TZ = True
 STATIC_URL = "static/"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -102,3 +112,15 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
 }
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
+
+# Cafe Bazaar annual subscription / entitlement settings.
+SUBSCRIPTION_TRIAL_DAYS = env_int("SUBSCRIPTION_TRIAL_DAYS", 7)
+BAZAAR_PACKAGE_NAME = os.getenv("BAZAAR_PACKAGE_NAME", "com.hamrahemadar.app").strip()
+BAZAAR_ANNUAL_SUBSCRIPTION_ID = os.getenv("BAZAAR_ANNUAL_SUBSCRIPTION_ID", "hamrah_madar_premium_annual").strip()
+BAZAAR_CLIENT_ID = os.getenv("BAZAAR_CLIENT_ID", "").strip()
+BAZAAR_CLIENT_SECRET = os.getenv("BAZAAR_CLIENT_SECRET", "").strip()
+BAZAAR_REFRESH_TOKEN = os.getenv("BAZAAR_REFRESH_TOKEN", "").strip()
+BAZAAR_VERIFICATION_MODE = os.getenv("BAZAAR_VERIFICATION_MODE", "mock" if DEBUG else "api").strip().lower()
+
+# Google Sign-In verification.
+GOOGLE_OAUTH_CLIENT_IDS = env_list("GOOGLE_OAUTH_CLIENT_IDS", "")

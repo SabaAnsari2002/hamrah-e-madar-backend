@@ -7,11 +7,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from config.ownership import PregnancyOwnedQuerysetMixin
 from apps.audit.models import AuditLog
+from apps.subscriptions.permissions import HasPremiumAccess
 from .models import *
 from .serializers import *
 from .filters import VisitFilter,LabFilter,UltrasoundFilter,MedicationFilter
 
 class OwnedRecordViewSet(PregnancyOwnedQuerysetMixin,viewsets.ModelViewSet):
+    permission_classes=[HasPremiumAccess]
     filterset_fields=['pregnancy'];ordering_fields=['created_at'];
     def perform_create(self,serializer):
         super().perform_create(serializer);obj=serializer.instance
@@ -43,12 +45,14 @@ class MedicationViewSet(OwnedRecordViewSet):
     def today_completion(self,request,pk=None):
         med=self.get_object();completed=bool(request.data.get('completed',True));obj,_=MedicationIntake.objects.update_or_create(medication=med,date=timezone.localdate(),defaults={'completed':completed});return Response({'medication':str(med.id),'date':obj.date,'completed':obj.completed})
 class VisitQuestionDetailViewSet(viewsets.GenericViewSet):
+    permission_classes=[HasPremiumAccess]
     queryset=VisitQuestion.objects.select_related('visit__pregnancy');serializer_class=VisitQuestionSerializer
     def get_queryset(self):return super().get_queryset().filter(visit__pregnancy__user=self.request.user)
     def partial_update(self,request,pk=None):
         q=self.get_object();s=self.get_serializer(q,data=request.data,partial=True);s.is_valid(raise_exception=True);s.save();return Response(s.data)
     def destroy(self,request,pk=None):self.get_object().delete();return Response(status=204)
 class RecordsSummaryView(APIView):
+    permission_classes=[HasPremiumAccess]
     def get(self,request):
         p=request.user.pregnancies.filter(status='ACTIVE').first()
         if not p:return Response({'visits':[],'labs':[],'ultrasounds':[],'medications':[]})
