@@ -1,0 +1,85 @@
+# -----------------------------
+# Python
+# -----------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+
+# -----------------------------
+# Virtual environments
+# -----------------------------
+.venv/
+venv/
+env/
+ENV/
+
+# -----------------------------
+# Django
+# -----------------------------
+db.sqlite3
+db.sqlite3-journal
+
+# Local media uploads
+media/
+
+# Collected static files
+staticfiles/
+
+# -----------------------------
+# Environment / secrets
+# -----------------------------
+.env
+.env.*
+!.env.example
+
+# -----------------------------
+# Logs
+# -----------------------------
+*.log
+
+# -----------------------------
+# Test / coverage
+# -----------------------------
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.tox/
+.nox/
+
+# -----------------------------
+# Type checking / lint caches
+# -----------------------------
+.mypy_cache/
+.ruff_cache/
+.dmypy.json
+dmypy.json
+
+# -----------------------------
+# Packaging
+# -----------------------------
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# -----------------------------
+# IDEs
+# -----------------------------
+.idea/
+.vscode/
+*.iml
+
+# -----------------------------
+# OS
+# -----------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# -----------------------------
+# Temporary files
+# -----------------------------
+*.tmp
+*.swp
+*.swo

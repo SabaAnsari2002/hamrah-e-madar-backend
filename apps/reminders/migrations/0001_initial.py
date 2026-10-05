@@ -1,0 +1,6 @@
+import uuid
+from django.conf import settings
+from django.db import migrations,models
+class Migration(migrations.Migration):
+    initial=True;dependencies=[migrations.swappable_dependency(settings.AUTH_USER_MODEL),('pregnancies','0001_initial')]
+    operations=[migrations.CreateModel(name='Reminder',fields=[('id',models.UUIDField(default=uuid.uuid4,editable=False,primary_key=True,serialize=False)),('title',models.CharField(max_length=200)),('type',models.CharField(choices=[('VISIT','Visit'),('LAB','Lab'),('ULTRASOUND','Ultrasound'),('MEDICATION','Medication'),('MEASUREMENT','Measurement'),('PERSONAL','Personal')],db_index=True,max_length=20)),('scheduled_at',models.DateTimeField(db_index=True)),('is_completed',models.BooleanField(db_index=True,default=False)),('note',models.TextField(blank=True)),('created_at',models.DateTimeField(auto_now_add=True)),('updated_at',models.DateTimeField(auto_now=True)),('pregnancy',models.ForeignKey(blank=True,null=True,on_delete=models.deletion.CASCADE,related_name='reminders',to='pregnancies.pregnancy')),('user',models.ForeignKey(on_delete=models.deletion.CASCADE,related_name='reminders',to=settings.AUTH_USER_MODEL))],options={'ordering':['scheduled_at']})]

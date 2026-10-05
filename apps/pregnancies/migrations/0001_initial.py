@@ -1,0 +1,12 @@
+import uuid
+from django.conf import settings
+from django.db import migrations,models
+from django.db.models import Q
+class Migration(migrations.Migration):
+    initial=True;dependencies=[migrations.swappable_dependency(settings.AUTH_USER_MODEL)]
+    operations=[
+        migrations.CreateModel(name='PregnancyWeek',fields=[('week_number',models.PositiveSmallIntegerField(primary_key=True,serialize=False)),('baby_summary',models.TextField()),('mother_summary',models.TextField()),('baby_size_text',models.CharField(blank=True,max_length=160)),('baby_weight_text',models.CharField(blank=True,max_length=160)),('nutrition_summary',models.TextField(blank=True)),('activity_summary',models.TextField(blank=True)),('care_summary',models.TextField(blank=True)),('attention_summary',models.TextField(blank=True)),('medical_reviewer',models.CharField(blank=True,max_length=160)),('source_information',models.TextField(blank=True,default='Demo content — source not added.')),('created_at',models.DateTimeField(auto_now_add=True)),('updated_at',models.DateTimeField(auto_now=True))]),
+        migrations.CreateModel(name='Pregnancy',fields=[('id',models.UUIDField(default=uuid.uuid4,editable=False,primary_key=True,serialize=False)),('status',models.CharField(choices=[('ACTIVE','Active'),('COMPLETED','Completed'),('ENDED','Ended')],db_index=True,default='ACTIVE',max_length=16)),('lmp_date',models.DateField(blank=True,null=True)),('estimated_due_date',models.DateField(blank=True,null=True)),('actual_delivery_date',models.DateField(blank=True,null=True)),('is_multiple',models.BooleanField(default=False)),('is_first_pregnancy',models.BooleanField(blank=True,null=True)),('provider_status',models.CharField(choices=[('NONE','None'),('DOCTOR','Doctor'),('MIDWIFE','Midwife'),('OTHER','Other')],default='NONE',max_length=16)),('created_at',models.DateTimeField(auto_now_add=True)),('updated_at',models.DateTimeField(auto_now=True)),('user',models.ForeignKey(db_index=True,on_delete=models.deletion.CASCADE,related_name='pregnancies',to=settings.AUTH_USER_MODEL))],options={'ordering':['-created_at']}),
+        migrations.AddConstraint(model_name='pregnancyweek',constraint=models.CheckConstraint(condition=Q(week_number__gte=1)&Q(week_number__lte=40),name='pregnancy_week_1_40')),
+        migrations.AddConstraint(model_name='pregnancy',constraint=models.UniqueConstraint(condition=Q(status='ACTIVE'),fields=('user',),name='one_active_pregnancy_per_user')),
+    ]

@@ -1,0 +1,9 @@
+import uuid
+from django.db import migrations,models
+class Migration(migrations.Migration):
+    initial=True;dependencies=[('pregnancies','0001_initial')]
+    operations=[
+        migrations.CreateModel(name='CareTaskTemplate',fields=[('id',models.UUIDField(default=uuid.uuid4,editable=False,primary_key=True,serialize=False)),('title',models.CharField(max_length=200)),('description',models.TextField()),('week_from',models.PositiveSmallIntegerField()),('week_to',models.PositiveSmallIntegerField()),('category',models.CharField(max_length=40)),('is_active',models.BooleanField(db_index=True,default=True)),('sort_order',models.PositiveIntegerField(default=0)),('created_at',models.DateTimeField(auto_now_add=True)),('updated_at',models.DateTimeField(auto_now=True))],options={'ordering':['week_from','sort_order','title']}),
+        migrations.CreateModel(name='UserCareTask',fields=[('id',models.UUIDField(default=uuid.uuid4,editable=False,primary_key=True,serialize=False)),('scheduled_date',models.DateField(db_index=True)),('status',models.CharField(choices=[('PENDING','Pending'),('COMPLETED','Completed'),('SKIPPED','Skipped')],db_index=True,default='PENDING',max_length=12)),('completed_at',models.DateTimeField(blank=True,null=True)),('created_at',models.DateTimeField(auto_now_add=True)),('updated_at',models.DateTimeField(auto_now=True)),('pregnancy',models.ForeignKey(on_delete=models.deletion.CASCADE,related_name='care_tasks',to='pregnancies.pregnancy')),('template',models.ForeignKey(on_delete=models.deletion.PROTECT,to='care.caretasktemplate'))],options={'ordering':['scheduled_date','template__sort_order']}),
+        migrations.AddConstraint(model_name='usercaretask',constraint=models.UniqueConstraint(fields=('pregnancy','template','scheduled_date'),name='unique_care_assignment')),
+    ]
