@@ -1,0 +1,6 @@
+{% extends "admin/base.html" %}
+{% load static %}
+{% block title %}Hamrah-e-Madar Admin{% endblock %}
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static 'admin/css/hamrah_admin.css' %}">{% endblock %}
+{% block branding %}<h1 id="site-name"><a href="/cms/">Hamrah-e-Madar CMS</a></h1>{% endblock %}
+{% block nav-global %}<div class="hamrah-links"><a href="/cms/">Dashboard</a></div>{% endblock %}

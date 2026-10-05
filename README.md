@@ -110,3 +110,11 @@ Model/query code avoids SQLite-specific application logic. Switching to PostgreS
 For an Android Emulator running on the same development machine, the host Django server is reachable at `http://10.0.2.2:8000/` when Django is started with `runserver 0.0.0.0:8000`. For a physical device, use the development machine's LAN IPv4 address and include that address in the `ALLOWED_HOSTS` environment variable. See `LOCAL_RUN_FA.md` and the helper scripts under `scripts/`.
 
 The seeded measurements and health records are synthetic/realistic test data, not records of real patients. Do not treat them as clinical reference data.
+
+## CMS Panel
+- Staff dashboard: `/cms/`
+- Django admin: `/admin/`
+
+## Google Sign-In API
+- `POST /api/v1/auth/google/` with body `{ "id_token": "..." }`
+- Configure `GOOGLE_OAUTH_CLIENT_IDS` with the allowed web client id(s).

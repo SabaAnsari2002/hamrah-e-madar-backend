@@ -24,6 +24,7 @@ def api_exception_handler(exc, context):
     code_map = {
         400: "validation_error",
         401: "not_authenticated",
+        402: "subscription_required",
         403: "permission_denied",
         404: "not_found",
         405: "method_not_allowed",

@@ -1,0 +1,140 @@
+{% load static %}
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hamrah-e-Madar CMS</title>
+  <link rel="stylesheet" href="{% static 'cms/panel.css' %}">
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">HM</div>
+    <nav>
+      <a class="active" href="/cms/">داشبورد</a>
+      <a href="/admin/accounts/user/">کاربران</a>
+      <a href="/admin/pregnancies/pregnancy/">بارداری</a>
+      <a href="/admin/content/article/">محتوا</a>
+      <a href="/admin/subscriptions/bazaarsubscription/">اشتراک‌ها</a>
+      <a href="/admin/reminders/reminder/">یادآوری‌ها</a>
+      <a href="/admin/">پنل ادمین</a>
+    </nav>
+    <div class="sidebar-footer"><a href="/admin/logout/">خروج</a></div>
+  </aside>
+  <main class="content">
+    <header class="topbar">
+      <div>
+        <div class="muted">Hamrah-e-Madar</div>
+        <h1>CMS Dashboard</h1>
+      </div>
+      <div class="profile-chip">{{ request.user.display_name|default:request.user.phone_number|default:request.user.email }}</div>
+    </header>
+
+    <section class="hero-grid">
+      <div class="hero card soft">
+        <div class="eyebrow">نمای کلی</div>
+        <h2>مدیریت کامل بک‌اند همراه‌مادر</h2>
+        <p>داشبورد مدیریتی با ظاهر الهام‌گرفته از نمونه ارسالی شما. از اینجا می‌توانید داده‌ها، مقالات، یادآوری‌ها و اشتراک‌های کاربران را مدیریت کنید و با یک کلیک به صفحه مدیریت هر بخش بروید.</p>
+        <div class="pill-row">
+          <span class="pill">OTP + Google Login</span>
+          <span class="pill">Bazaar Subscription</span>
+          <span class="pill">Pregnancy CMS</span>
+        </div>
+      </div>
+      <div class="card metric">
+        <div class="eyebrow">کاربران</div>
+        <div class="big">{{ stats.users }}</div>
+        <div class="muted">مجموع کاربران ثبت‌شده</div>
+      </div>
+      <div class="card metric">
+        <div class="eyebrow">بارداری فعال</div>
+        <div class="big">{{ stats.active_pregnancies }}</div>
+        <div class="muted">پرونده‌های فعال</div>
+      </div>
+      <div class="card metric">
+        <div class="eyebrow">اشتراک فعال</div>
+        <div class="big">{{ stats.active_subscriptions }}</div>
+        <div class="muted">اشتراک‌های premium معتبر</div>
+      </div>
+    </section>
+
+    <section class="cards-3">
+      <div class="card">
+        <h3>بخش‌های مدیریتی</h3>
+        <div class="list sections">
+        {% for item in management_sections %}
+          <a class="section-item" href="{{ item.url }}">
+            <div class="icon">{{ item.icon }}</div>
+            <div>
+              <div class="title">{{ item.title }}</div>
+              <div class="muted">{{ item.subtitle }}</div>
+            </div>
+          </a>
+        {% endfor %}
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>کاربران جدید</h3>
+        <div class="list">
+        {% for user in recent_users %}
+          <div class="row-item">
+            <div>
+              <div class="title">{{ user.display_name|default:user.email|default:user.phone_number }}</div>
+              <div class="muted">{{ user.auth_provider }} · {{ user.date_joined|date:"Y-m-d H:i" }}</div>
+            </div>
+            <span class="badge">{{ user.phone_number|default:user.email }}</span>
+          </div>
+        {% empty %}<div class="muted">داده‌ای وجود ندارد.</div>{% endfor %}
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>ترکیب اشتراک‌ها</h3>
+        <div class="list">
+        {% for item in subscription_mix %}
+          <div class="row-item">
+            <div class="title">{{ item.status }}</div>
+            <span class="badge">{{ item.total }}</span>
+          </div>
+        {% empty %}<div class="muted">هنوز اشتراکی ثبت نشده است.</div>{% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <section class="cards-2">
+      <div class="card">
+        <h3>یادآوری‌های آینده</h3>
+        <div class="table">
+          <div class="thead"><span>عنوان</span><span>کاربر</span><span>زمان</span></div>
+          {% for reminder in upcoming_reminders %}
+          <div class="trow"><span>{{ reminder.title }}</span><span>{{ reminder.user.display_name|default:reminder.user.phone_number|default:reminder.user.email }}</span><span>{{ reminder.scheduled_at|date:"Y-m-d H:i" }}</span></div>
+          {% empty %}<div class="muted">یادآوری آینده‌ای وجود ندارد.</div>{% endfor %}
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>آخرین فعالیت‌ها</h3>
+        <div class="table">
+          <div class="thead"><span>کاربر</span><span>رویداد</span><span>زمان</span></div>
+          {% for row in recent_audits %}
+          <div class="trow"><span>{{ row.user.display_name|default:row.user.phone_number|default:row.user.email|default:'—' }}</span><span>{{ row.get_action_display }}</span><span>{{ row.created_at|date:"Y-m-d H:i" }}</span></div>
+          {% empty %}<div class="muted">لاگ جدیدی وجود ندارد.</div>{% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>آخرین اعتبارسنجی‌های بازار</h3>
+      <div class="table">
+        <div class="thead"><span>کاربر</span><span>SKU</span><span>انقضا</span><span>وضعیت</span></div>
+        {% for row in latest_subscriptions %}
+        <div class="trow"><span>{{ row.user.display_name|default:row.user.phone_number|default:row.user.email }}</span><span>{{ row.product_id }}</span><span>{{ row.expires_at|date:"Y-m-d H:i" }}</span><span><span class="status {{ row.status|lower }}">{{ row.status }}</span></span></div>
+        {% empty %}<div class="muted">هنوز خریدی ثبت نشده است.</div>{% endfor %}
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>

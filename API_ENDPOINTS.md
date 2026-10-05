@@ -54,3 +54,13 @@ Health measurements accept `date_from`, `date_to`, `pregnancy`, and resource-spe
 ## Medical-safety behavior
 
 These endpoints store and retrieve user-entered or curated records. They do not diagnose disease, interpret measurements as a diagnosis, prescribe medication, or alter treatment. Medical content publication is controlled by content administrators and draft content is not returned to normal users.
+
+## Premium subscription / Cafe Bazaar
+
+| Endpoint | Method | Description |
+| --- | --- | --- |
+| `subscription/status/` | GET | Server-authoritative entitlement, 7-day trial and active Bazaar annual subscription |
+| `subscription/bazaar/checkout/` | POST | Creates a short-lived developer payload bound to the logged-in user |
+| `subscription/bazaar/verify/` | POST | Verifies the Bazaar subscription token server-side and activates/refreshes entitlement |
+
+Premium API groups are `health/*`, visits/labs/ultrasounds/medications, `records/summary/`, `care/tasks/`, and `reminders/`. They return HTTP 402 with `code=subscription_required` when neither the 7-day trial nor the verified annual subscription is active. Pregnancy/current-week/content/profile remain available without premium entitlement.
