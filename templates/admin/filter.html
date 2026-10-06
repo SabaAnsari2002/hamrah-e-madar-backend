@@ -1,0 +1,4 @@
+<details class="hamrah-filter-group" data-filter-title="{{ title }}" open>
+  <summary><span>{{ title }}</span><span class="hamrah-filter-chevron">⌄</span></summary>
+  <ul>{% for choice in choices %}<li{% if choice.selected %} class="selected"{% endif %}><a href="{{ choice.query_string|iriencode }}">{{ choice.display }}</a></li>{% endfor %}</ul>
+</details>

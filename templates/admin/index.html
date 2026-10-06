@@ -1,0 +1,50 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static 'admin/css/dashboard.css' %}">{% endblock %}
+{% block bodyclass %}{{ block.super }} dashboard hamrah-admin-dashboard{% endblock %}
+{% block nav-breadcrumbs %}{% endblock %}
+{% block nav-sidebar %}{% endblock %}
+{% block content_title %}{% endblock %}
+
+{% block content %}
+<div class="hamrah-admin-home">
+  <section class="hamrah-admin-hero">
+    <div>
+      <span class="hamrah-admin-kicker">مدیریت داده‌های سامانه</span>
+      <h1>پنل مدیریت همراه‌مادر</h1>
+      <p>مدل‌های بک‌اند را مدیریت کنید یا برای نمای مدیریتی و آمار کلی به داشبورد CMS برگردید.</p>
+    </div>
+    <a class="hamrah-cms-button" href="/cms/">رفتن به داشبورد CMS ←</a>
+  </section>
+
+  <div class="hamrah-app-grid">
+    {% for app in app_list %}
+    <section class="hamrah-app-card app-{{ app.app_label }}">
+      <header>
+        <span class="hamrah-app-icon">{{ app.name|slice:":1"|upper }}</span>
+        <div>
+          <h2>{{ app.name }}</h2>
+          <small>{{ app.models|length }} بخش مدیریتی</small>
+        </div>
+      </header>
+      <div class="hamrah-model-list">
+        {% for model in app.models %}
+        <div class="hamrah-model-row">
+          {% if model.admin_url %}
+          <a class="hamrah-model-name" href="{{ model.admin_url }}">{{ model.name }}</a>
+          {% else %}<span class="hamrah-model-name">{{ model.name }}</span>{% endif %}
+          <span class="hamrah-model-actions">
+            {% if model.add_url %}<a href="{{ model.add_url }}">افزودن</a>{% endif %}
+            {% if model.admin_url %}<a href="{{ model.admin_url }}">مدیریت</a>{% endif %}
+          </span>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% empty %}
+    <div class="hamrah-admin-empty">شما مجوز مشاهده هیچ بخشی را ندارید.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}ورود به پنل مدیریت | همراه‌مادر{% endblock %}
+{% block bodyclass %}{{ block.super }} login hamrah-login-page{% endblock %}
+{% block usertools %}{% endblock %}
+{% block nav-sidebar %}{% endblock %}
+{% block nav-breadcrumbs %}{% endblock %}
+{% block content_title %}{% endblock %}
+
+{% block content %}
+<div class="hamrah-login-shell">
+  <section class="hamrah-login-card">
+    <div class="hamrah-login-intro">
+      <span class="hamrah-login-mark">♥</span>
+      <span class="hamrah-login-eyebrow">پنل مدیریت همراه‌مادر</span>
+      <h1>خوش آمدید</h1>
+      <p>برای دسترسی به داشبورد مدیریت و اطلاعات سامانه وارد حساب مدیریتی خود شوید.</p>
+    </div>
+
+    {% if form.errors %}
+    <div class="hamrah-login-error">اطلاعات ورود صحیح نیست. شماره موبایل و رمز عبور را بررسی کنید.</div>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+    <div class="hamrah-login-error">این حساب اجازه دسترسی به پنل مدیریت را ندارد.</div>
+    {% endif %}
+
+    <form action="{{ app_path }}" method="post" id="login-form" class="hamrah-login-form">
+      {% csrf_token %}
+      <div class="hamrah-field">
+        <label for="id_username">شماره موبایل</label>
+        {{ form.username }}
+        {% if form.username.errors %}<small class="hamrah-field-error">{{ form.username.errors|striptags }}</small>{% endif %}
+      </div>
+      <div class="hamrah-field">
+        <label for="id_password">رمز عبور</label>
+        {{ form.password }}
+        {% if form.password.errors %}<small class="hamrah-field-error">{{ form.password.errors|striptags }}</small>{% endif %}
+        <input type="hidden" name="next" value="{{ next }}">
+      </div>
+      <button class="hamrah-login-submit" type="submit">ورود به پنل</button>
+    </form>
+    <div class="hamrah-login-note">دسترسی این بخش فقط برای کاربران Staff فعال است.</div>
+  </section>
+
+  <aside class="hamrah-login-visual" aria-hidden="true">
+    <div class="hamrah-visual-glow one"></div>
+    <div class="hamrah-visual-glow two"></div>
+    <div class="hamrah-visual-content">
+      <span class="hamrah-visual-pill">Hamrah-e-Madar</span>
+      <h2>مدیریت دقیق‌تر، تجربه بهتر برای مادران</h2>
+      <p>کاربران، بارداری‌ها، محتوای پزشکی، اشتراک‌ها و یادآوری‌ها را از یک محیط یکپارچه کنترل کنید.</p>
+      <div class="hamrah-visual-stats">
+        <span><b>CMS</b><small>مدیریت محتوا</small></span>
+        <span><b>API</b><small>کنترل سرویس</small></span>
+        <span><b>RTL</b><small>رابط فارسی</small></span>
+      </div>
+    </div>
+  </aside>
+</div>
+{% endblock %}

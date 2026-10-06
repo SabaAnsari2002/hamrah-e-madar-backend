@@ -1,0 +1,7 @@
+<div class="actions hamrah-bulk-actions">
+  {% block actions %}
+    <div class="hamrah-action-fields">{% for field in action_form %}{% if field.label %}<label><span>{{ field.label }}</span>{{ field }}</label>{% else %}{{ field }}{% endif %}{% endfor %}</div>
+    <button type="submit" class="button hamrah-action-run" name="index" value="{{ action_index|default:0 }}">اجرای عملیات</button>
+    {% if actions_selection_counter %}<span class="action-counter" data-actions-icnt="{{ cl.result_list|length }}">{{ selection_note }}</span>{% endif %}
+  {% endblock %}
+</div>
