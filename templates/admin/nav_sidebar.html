@@ -1,0 +1,39 @@
+{% load i18n %}
+<button class="sticky toggle-nav-sidebar" id="toggle-nav-sidebar" aria-label="نمایش یا مخفی کردن منوی مدیریت" type="button">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v2H4V6Zm0 5h16v2H4v-2Zm0 5h16v2H4v-2Z"/></svg>
+</button>
+<nav class="sticky hamrah-admin-sidebar" id="nav-sidebar" aria-label="منوی اصلی مدیریت">
+  <div class="hamrah-sidebar-top">
+    <div class="hamrah-sidebar-title">
+      <span class="hamrah-sidebar-title-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10Zm0 8h8v-6H3v6Zm10 0h8V11h-8v10Zm0-18v6h8V3h-8Z"/></svg>
+      </span>
+      <span><strong>مدیریت سامانه</strong><small>دسترسی سریع به بخش‌ها</small></span>
+    </div>
+    <label class="hamrah-nav-search" for="nav-filter">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 19-5.2-5.2A7 7 0 1 0 14.4 15L19.6 20.2 21 19ZM5 9a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z"/></svg>
+      <input type="search" id="nav-filter" placeholder="جستجو در منو…" aria-label="جستجو در منوی مدیریت">
+    </label>
+  </div>
+
+  <div class="hamrah-sidebar-shortcuts">
+    <a href="/cms/" class="hamrah-sidebar-shortcut">
+      <span class="hamrah-shortcut-icon rose"><svg viewBox="0 0 24 24"><path d="M4 13h6v7H4v-7Zm0-9h6v7H4V4Zm10 5h6v11h-6V9Zm0-5h6v3h-6V4Z"/></svg></span>
+      <span><strong>داشبورد CMS</strong><small>آمار و نمای کلی</small></span>
+    </a>
+    <a href="{% url 'admin:index' %}" class="hamrah-sidebar-shortcut{% if request.path == '/admin/' %} active{% endif %}">
+      <span class="hamrah-shortcut-icon violet"><svg viewBox="0 0 24 24"><path d="M12 3 2 12h3v8h6v-5h2v5h6v-8h3L12 3Z"/></svg></span>
+      <span><strong>خانه مدیریت</strong><small>مدل‌ها و دسترسی‌ها</small></span>
+    </a>
+  </div>
+
+  <div class="hamrah-sidebar-label">بخش‌های مدیریتی</div>
+  <div class="hamrah-sidebar-apps">
+    {% include 'admin/app_list.html' with app_list=available_apps show_changelinks=False %}
+  </div>
+
+  <div class="hamrah-sidebar-footer">
+    <span class="hamrah-live-dot"></span>
+    <span><strong>Hamrah-e-Madar</strong><small>Management Console</small></span>
+  </div>
+</nav>

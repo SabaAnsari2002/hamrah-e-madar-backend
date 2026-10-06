@@ -2,6 +2,12 @@ from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
+admin.site.site_header = "مدیریت همراه‌مادر"
+admin.site.site_title = "همراه‌مادر"
+admin.site.index_title = "مدیریت سامانه"
+admin.site.site_url = "/cms/"
+admin.site.enable_nav_sidebar = True
+
 urlpatterns = [
     path('cms/', include('apps.cms.urls')),
     path('admin/', admin.site.urls),

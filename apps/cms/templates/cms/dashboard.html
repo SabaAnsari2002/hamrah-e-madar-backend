@@ -1,140 +1,308 @@
 {% load static %}
 <!doctype html>
-<html lang="fa" dir="rtl">
+<html lang="fa" dir="rtl" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hamrah-e-Madar CMS</title>
+  <meta name="color-scheme" content="light dark">
+  <title>داشبورد مدیریت | همراه‌مادر</title>
   <link rel="stylesheet" href="{% static 'cms/panel.css' %}">
+  <script src="{% static 'cms/panel.js' %}" defer></script>
 </head>
 <body>
-<div class="shell">
-  <aside class="sidebar">
-    <div class="brand">HM</div>
-    <nav>
-      <a class="active" href="/cms/">داشبورد</a>
-      <a href="/admin/accounts/user/">کاربران</a>
-      <a href="/admin/pregnancies/pregnancy/">بارداری</a>
-      <a href="/admin/content/article/">محتوا</a>
-      <a href="/admin/subscriptions/bazaarsubscription/">اشتراک‌ها</a>
-      <a href="/admin/reminders/reminder/">یادآوری‌ها</a>
-      <a href="/admin/">پنل ادمین</a>
-    </nav>
-    <div class="sidebar-footer"><a href="/admin/logout/">خروج</a></div>
-  </aside>
-  <main class="content">
-    <header class="topbar">
-      <div>
-        <div class="muted">Hamrah-e-Madar</div>
-        <h1>CMS Dashboard</h1>
-      </div>
-      <div class="profile-chip">{{ request.user.display_name|default:request.user.phone_number|default:request.user.email }}</div>
-    </header>
+  <div class="app-shell">
+    <button class="sidebar-overlay" type="button" data-sidebar-close aria-label="بستن منو"></button>
 
-    <section class="hero-grid">
-      <div class="hero card soft">
-        <div class="eyebrow">نمای کلی</div>
-        <h2>مدیریت کامل بک‌اند همراه‌مادر</h2>
-        <p>داشبورد مدیریتی با ظاهر الهام‌گرفته از نمونه ارسالی شما. از اینجا می‌توانید داده‌ها، مقالات، یادآوری‌ها و اشتراک‌های کاربران را مدیریت کنید و با یک کلیک به صفحه مدیریت هر بخش بروید.</p>
-        <div class="pill-row">
-          <span class="pill">OTP + Google Login</span>
-          <span class="pill">Bazaar Subscription</span>
-          <span class="pill">Pregnancy CMS</span>
-        </div>
+    <aside class="sidebar" data-sidebar>
+      <div class="sidebar-head">
+        <a class="brand" href="/cms/" aria-label="همراه‌مادر">
+          <span class="brand-mark">
+            <svg aria-hidden="true"><use href="{% static 'cms/icons.svg' %}#heart"></use></svg>
+          </span>
+          <span class="brand-copy">
+            <strong>همراه‌مادر</strong>
+            <small>پنل مدیریت</small>
+          </span>
+        </a>
+        <button class="icon-button sidebar-close" type="button" data-sidebar-close aria-label="بستن منو">
+          <svg aria-hidden="true"><use href="{% static 'cms/icons.svg' %}#close"></use></svg>
+        </button>
       </div>
-      <div class="card metric">
-        <div class="eyebrow">کاربران</div>
-        <div class="big">{{ stats.users }}</div>
-        <div class="muted">مجموع کاربران ثبت‌شده</div>
-      </div>
-      <div class="card metric">
-        <div class="eyebrow">بارداری فعال</div>
-        <div class="big">{{ stats.active_pregnancies }}</div>
-        <div class="muted">پرونده‌های فعال</div>
-      </div>
-      <div class="card metric">
-        <div class="eyebrow">اشتراک فعال</div>
-        <div class="big">{{ stats.active_subscriptions }}</div>
-        <div class="muted">اشتراک‌های premium معتبر</div>
-      </div>
-    </section>
 
-    <section class="cards-3">
-      <div class="card">
-        <h3>بخش‌های مدیریتی</h3>
-        <div class="list sections">
-        {% for item in management_sections %}
-          <a class="section-item" href="{{ item.url }}">
-            <div class="icon">{{ item.icon }}</div>
-            <div>
-              <div class="title">{{ item.title }}</div>
-              <div class="muted">{{ item.subtitle }}</div>
-            </div>
+      <nav class="sidebar-nav" aria-label="منوی مدیریت">
+        <div class="nav-group">
+          <span class="nav-label">نمای کلی</span>
+          <a class="nav-item active" href="/cms/">
+            <svg aria-hidden="true"><use href="{% static 'cms/icons.svg' %}#dashboard"></use></svg>
+            <span>داشبورد</span>
           </a>
-        {% endfor %}
         </div>
-      </div>
 
-      <div class="card">
-        <h3>کاربران جدید</h3>
-        <div class="list">
-        {% for user in recent_users %}
-          <div class="row-item">
-            <div>
-              <div class="title">{{ user.display_name|default:user.email|default:user.phone_number }}</div>
-              <div class="muted">{{ user.auth_provider }} · {{ user.date_joined|date:"Y-m-d H:i" }}</div>
+        <div class="nav-group">
+          <span class="nav-label">مدیریت</span>
+          <a class="nav-item" href="/admin/accounts/user/">
+            <svg aria-hidden="true"><use href="{% static 'cms/icons.svg' %}#users"></use></svg>
+            <span>کاربران</span>
+          </a>
+          <a class="nav-item" href="/admin/pregnancies/pregnancy/">
+            <svg aria-hidden="true"><use href="{% static 'cms/icons.svg' %}#pregnancy"></use></svg>
+            <span>بارداری‌ها</span>
+          </a>
+          <a class="nav-item" href="/admin/content/article/">
+            <svg aria-hidden="true"><use href="{% static 'cms/icons.svg' %}#articles"></use></svg>
+            <span>محتوا</span>
+          </a>
+          <a class="nav-item" href="/admin/reminders/reminder/">
+            <svg aria-hidden="true"><use href="{% static 'cms/icons.svg' %}#reminder"></use></svg>
+            <span>یادآوری‌ها</span>
+          </a>
+          <a class="nav-item" href="/admin/subscriptions/bazaarsubscription/">
+            <svg aria-hidden="true"><use href="{% static 'cms/icons.svg' %}#diamond"></use></svg>
+            <span>اشتراک‌ها</span>
+          </a>
+        </div>
+
+        <div class="nav-group">
+          <span class="nav-label">سیستم</span>
+          <a class="nav-item" href="/admin/">
+            <svg aria-hidden="true"><use href="{% static 'cms/icons.svg' %}#settings"></use></svg>
+            <span>Django Admin</span>
+          </a>
+          <a class="nav-item" href="/api/docs/" target="_blank" rel="noopener">
+            <svg aria-hidden="true"><use href="{% static 'cms/icons.svg' %}#api"></use></svg>
+            <span>مستندات API</span>
+          </a>
+        </div>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="mini-profile">
+          <span class="avatar">{{ request.user.display_name|default:request.user.phone_number|default:request.user.email|slice:":1"|upper }}</span>
+          <div class="mini-profile-copy">
+            <strong>{{ request.user.display_name|default:request.user.phone_number|default:request.user.email }}</strong>
+            <small>مدیر سیستم</small>
+          </div>
+        </div>
+        <a class="logout-link" href="/admin/logout/">
+          <svg aria-hidden="true"><use href="{% static 'cms/icons.svg' %}#logout"></use></svg>
+          <span>خروج از حساب</span>
+        </a>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-start">
+          <button class="icon-button mobile-menu" type="button" data-sidebar-open aria-label="باز کردن منو">
+            <svg aria-hidden="true"><use href="{% static 'cms/icons.svg' %}#menu"></use></svg>
+          </button>
+          <div>
+            <p class="page-kicker">مرکز کنترل همراه‌مادر</p>
+            <h1>داشبورد مدیریت</h1>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <span class="date-chip">
+            <svg aria-hidden="true"><use href="{% static 'cms/icons.svg' %}#calendar"></use></svg>
+            {{ now|date:"Y/m/d" }}
+          </span>
+          <button class="icon-button" type="button" data-theme-toggle aria-label="تغییر حالت نمایش">
+            <svg class="theme-sun" aria-hidden="true"><use href="{% static 'cms/icons.svg' %}#sun"></use></svg>
+            <svg class="theme-moon" aria-hidden="true"><use href="{% static 'cms/icons.svg' %}#moon"></use></svg>
+          </button>
+          <a class="profile-button" href="/admin/accounts/user/{{ request.user.pk }}/change/">
+            <span class="avatar">{{ request.user.display_name|default:request.user.phone_number|default:request.user.email|slice:":1"|upper }}</span>
+            <span class="profile-copy">
+              <strong>{{ request.user.display_name|default:request.user.phone_number|default:request.user.email }}</strong>
+              <small>مشاهده پروفایل</small>
+            </span>
+            <svg class="chevron" aria-hidden="true"><use href="{% static 'cms/icons.svg' %}#chevron-left"></use></svg>
+          </a>
+        </div>
+      </header>
+
+      <section class="welcome-card">
+        <div class="welcome-content">
+          <span class="eyebrow-chip">مدیریت یکپارچه</span>
+          <h2>همه‌چیز برای مدیریت همراه‌مادر، در یک نگاه</h2>
+          <p>وضعیت کاربران، بارداری‌ها، محتوای پزشکی، یادآوری‌ها و اشتراک‌ها را سریع بررسی کن و مستقیم وارد بخش موردنظر شو.</p>
+          <div class="welcome-actions">
+            <a class="button primary" href="/admin/">
+              ورود به مدیریت داده‌ها
+              <svg aria-hidden="true"><use href="{% static 'cms/icons.svg' %}#arrow-left"></use></svg>
+            </a>
+            <a class="button ghost" href="/api/docs/" target="_blank" rel="noopener">مشاهده API Docs</a>
+          </div>
+        </div>
+        <div class="welcome-visual" aria-hidden="true">
+          <div class="orb orb-1"></div>
+          <div class="orb orb-2"></div>
+          <div class="visual-card visual-card-main">
+            <span class="visual-icon"><svg><use href="{% static 'cms/icons.svg' %}#heart"></use></svg></span>
+            <strong>همراه‌مادر</strong>
+            <small>Maternal care platform</small>
+          </div>
+          <div class="visual-card visual-card-float">
+            <span class="pulse-dot"></span>
+            <div><strong>{{ stats.active_pregnancies }}</strong><small>بارداری فعال</small></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="metrics-grid" aria-label="آمار کلیدی">
+        <article class="metric-card tone-rose">
+          <div class="metric-icon"><svg><use href="{% static 'cms/icons.svg' %}#users"></use></svg></div>
+          <div class="metric-copy"><span>کل کاربران</span><strong>{{ stats.users }}</strong><small>+{{ stats.new_users_week }} کاربر در ۷ روز اخیر</small></div>
+        </article>
+        <article class="metric-card tone-violet">
+          <div class="metric-icon"><svg><use href="{% static 'cms/icons.svg' %}#pregnancy"></use></svg></div>
+          <div class="metric-copy"><span>بارداری فعال</span><strong>{{ stats.active_pregnancies }}</strong><small>پرونده در حال پیگیری</small></div>
+        </article>
+        <article class="metric-card tone-indigo">
+          <div class="metric-icon"><svg><use href="{% static 'cms/icons.svg' %}#diamond"></use></svg></div>
+          <div class="metric-copy"><span>اشتراک فعال</span><strong>{{ stats.active_subscriptions }}</strong><small>{{ stats.active_trials }} کاربر در دوره آزمایشی</small></div>
+        </article>
+        <article class="metric-card tone-amber">
+          <div class="metric-icon"><svg><use href="{% static 'cms/icons.svg' %}#articles"></use></svg></div>
+          <div class="metric-copy"><span>مقالات منتشرشده</span><strong>{{ stats.published_articles }}</strong><small>{{ stats.draft_articles }} پیش‌نویس</small></div>
+        </article>
+        <article class="metric-card tone-sky">
+          <div class="metric-icon"><svg><use href="{% static 'cms/icons.svg' %}#reminder"></use></svg></div>
+          <div class="metric-copy"><span>یادآوری باز</span><strong>{{ stats.pending_reminders }}</strong><small>در انتظار اجرا</small></div>
+        </article>
+      </section>
+
+      <section class="dashboard-grid dashboard-grid-main">
+        <article class="panel panel-management">
+          <div class="panel-head">
+            <div><span class="panel-kicker">دسترسی سریع</span><h3>بخش‌های مدیریتی</h3></div>
+            <a class="text-link" href="/admin/">مشاهده همه <svg><use href="{% static 'cms/icons.svg' %}#arrow-left"></use></svg></a>
+          </div>
+          <div class="management-grid">
+            {% for item in management_sections %}
+            <a class="management-card tone-{{ item.tone }}" href="{{ item.url }}">
+              <span class="management-icon"><svg><use href="{% static 'cms/icons.svg' %}#{{ item.icon }}"></use></svg></span>
+              <span class="management-copy"><strong>{{ item.title }}</strong><small>{{ item.subtitle }}</small></span>
+              <span class="management-arrow"><svg><use href="{% static 'cms/icons.svg' %}#chevron-left"></use></svg></span>
+            </a>
+            {% endfor %}
+          </div>
+        </article>
+
+        <aside class="stacked-panels">
+          <article class="panel compact-panel">
+            <div class="panel-head"><div><span class="panel-kicker">روش ورود</span><h3>ترکیب کاربران</h3></div></div>
+            <div class="donut-wrap">
+              <div class="donut" style="--google: {{ auth_mix.google_percent }}%"><div><strong>{{ stats.users }}</strong><small>کاربر</small></div></div>
+              <div class="legend-list">
+                <div class="legend-item"><span class="legend-dot rose"></span><div><strong>شماره موبایل</strong><small>{{ auth_mix.phone }} کاربر</small></div><b>{{ auth_mix.phone_percent }}٪</b></div>
+                <div class="legend-item"><span class="legend-dot violet"></span><div><strong>Google</strong><small>{{ auth_mix.google }} کاربر</small></div><b>{{ auth_mix.google_percent }}٪</b></div>
+              </div>
             </div>
-            <span class="badge">{{ user.phone_number|default:user.email }}</span>
+          </article>
+
+          <article class="panel compact-panel">
+            <div class="panel-head"><div><span class="panel-kicker">وضعیت پرداخت</span><h3>اشتراک‌های بازار</h3></div></div>
+            <div class="progress-list">
+              {% for item in subscription_mix %}
+              <div class="progress-row">
+                <div class="progress-meta"><span>{{ item.status }}</span><b>{{ item.total }}</b></div>
+                <div class="progress-track"><span class="progress-fill status-{{ item.status|lower }}" style="width: {{ item.percent }}%"></span></div>
+              </div>
+              {% empty %}
+              <div class="empty-state compact"><svg><use href="{% static 'cms/icons.svg' %}#diamond"></use></svg><span>هنوز خریدی ثبت نشده است.</span></div>
+              {% endfor %}
+            </div>
+          </article>
+        </aside>
+      </section>
+
+      <section class="dashboard-grid dashboard-grid-secondary">
+        <article class="panel">
+          <div class="panel-head">
+            <div><span class="panel-kicker">کاربران</span><h3>عضویت‌های جدید</h3></div>
+            <a class="text-link" href="/admin/accounts/user/">مدیریت کاربران <svg><use href="{% static 'cms/icons.svg' %}#arrow-left"></use></svg></a>
           </div>
-        {% empty %}<div class="muted">داده‌ای وجود ندارد.</div>{% endfor %}
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>ترکیب اشتراک‌ها</h3>
-        <div class="list">
-        {% for item in subscription_mix %}
-          <div class="row-item">
-            <div class="title">{{ item.status }}</div>
-            <span class="badge">{{ item.total }}</span>
+          <div class="user-list">
+            {% for user in recent_users %}
+            <a class="user-row" href="/admin/accounts/user/{{ user.pk }}/change/">
+              <span class="avatar soft-avatar">{{ user.display_name|default:user.email|default:user.phone_number|slice:":1"|upper }}</span>
+              <span class="user-copy"><strong>{{ user.display_name|default:user.email|default:user.phone_number }}</strong><small>{{ user.phone_number|default:user.email }}</small></span>
+              <span class="provider-badge provider-{{ user.auth_provider|lower }}">{{ user.auth_provider }}</span>
+              <time>{{ user.date_joined|date:"m/d · H:i" }}</time>
+              <svg class="row-chevron"><use href="{% static 'cms/icons.svg' %}#chevron-left"></use></svg>
+            </a>
+            {% empty %}
+            <div class="empty-state"><svg><use href="{% static 'cms/icons.svg' %}#users"></use></svg><span>هنوز کاربری ثبت نشده است.</span></div>
+            {% endfor %}
           </div>
-        {% empty %}<div class="muted">هنوز اشتراکی ثبت نشده است.</div>{% endfor %}
-        </div>
-      </div>
-    </section>
+        </article>
 
-    <section class="cards-2">
-      <div class="card">
-        <h3>یادآوری‌های آینده</h3>
-        <div class="table">
-          <div class="thead"><span>عنوان</span><span>کاربر</span><span>زمان</span></div>
-          {% for reminder in upcoming_reminders %}
-          <div class="trow"><span>{{ reminder.title }}</span><span>{{ reminder.user.display_name|default:reminder.user.phone_number|default:reminder.user.email }}</span><span>{{ reminder.scheduled_at|date:"Y-m-d H:i" }}</span></div>
-          {% empty %}<div class="muted">یادآوری آینده‌ای وجود ندارد.</div>{% endfor %}
-        </div>
-      </div>
+        <article class="panel">
+          <div class="panel-head"><div><span class="panel-kicker">سیستم</span><h3>آخرین فعالیت‌ها</h3></div><a class="text-link" href="/admin/audit/auditlog/">مشاهده گزارش <svg><use href="{% static 'cms/icons.svg' %}#arrow-left"></use></svg></a></div>
+          <div class="activity-list">
+            {% for row in recent_audits %}
+            <div class="activity-row">
+              <span class="activity-icon"><svg><use href="{% static 'cms/icons.svg' %}#audit"></use></svg></span>
+              <div class="activity-copy"><strong>{{ row.get_action_display }}</strong><small>{{ row.user.display_name|default:row.user.phone_number|default:row.user.email|default:'کاربر حذف‌شده' }} · {{ row.object_type|default:'سیستم' }}</small></div>
+              <time>{{ row.created_at|date:"m/d · H:i" }}</time>
+            </div>
+            {% empty %}<div class="empty-state"><svg><use href="{% static 'cms/icons.svg' %}#audit"></use></svg><span>فعالیت جدیدی ثبت نشده است.</span></div>{% endfor %}
+          </div>
+        </article>
+      </section>
 
-      <div class="card">
-        <h3>آخرین فعالیت‌ها</h3>
-        <div class="table">
-          <div class="thead"><span>کاربر</span><span>رویداد</span><span>زمان</span></div>
-          {% for row in recent_audits %}
-          <div class="trow"><span>{{ row.user.display_name|default:row.user.phone_number|default:row.user.email|default:'—' }}</span><span>{{ row.get_action_display }}</span><span>{{ row.created_at|date:"Y-m-d H:i" }}</span></div>
-          {% empty %}<div class="muted">لاگ جدیدی وجود ندارد.</div>{% endfor %}
+      <section class="panel data-panel">
+        <div class="panel-head">
+          <div><span class="panel-kicker">برنامه پیش‌رو</span><h3>یادآوری‌های آینده</h3></div>
+          <a class="text-link" href="/admin/reminders/reminder/">همه یادآوری‌ها <svg><use href="{% static 'cms/icons.svg' %}#arrow-left"></use></svg></a>
         </div>
-      </div>
-    </section>
+        <div class="responsive-table">
+          <table>
+            <thead><tr><th>عنوان</th><th>کاربر</th><th>نوع</th><th>زمان اجرا</th><th>وضعیت</th></tr></thead>
+            <tbody>
+              {% for reminder in upcoming_reminders %}
+              <tr>
+                <td><span class="table-title">{{ reminder.title }}</span></td>
+                <td>{{ reminder.user.display_name|default:reminder.user.phone_number|default:reminder.user.email }}</td>
+                <td><span class="soft-badge">{{ reminder.get_type_display }}</span></td>
+                <td><time>{{ reminder.scheduled_at|date:"Y/m/d - H:i" }}</time></td>
+                <td><span class="status-badge status-pending"><span></span>در انتظار</span></td>
+              </tr>
+              {% empty %}<tr><td colspan="5"><div class="empty-state compact">یادآوری آینده‌ای وجود ندارد.</div></td></tr>{% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-    <section class="card">
-      <h3>آخرین اعتبارسنجی‌های بازار</h3>
-      <div class="table">
-        <div class="thead"><span>کاربر</span><span>SKU</span><span>انقضا</span><span>وضعیت</span></div>
-        {% for row in latest_subscriptions %}
-        <div class="trow"><span>{{ row.user.display_name|default:row.user.phone_number|default:row.user.email }}</span><span>{{ row.product_id }}</span><span>{{ row.expires_at|date:"Y-m-d H:i" }}</span><span><span class="status {{ row.status|lower }}">{{ row.status }}</span></span></div>
-        {% empty %}<div class="muted">هنوز خریدی ثبت نشده است.</div>{% endfor %}
-      </div>
-    </section>
-  </main>
-</div>
+      <section class="panel data-panel">
+        <div class="panel-head">
+          <div><span class="panel-kicker">پرداخت</span><h3>آخرین اعتبارسنجی‌های کافه‌بازار</h3></div>
+          <a class="text-link" href="/admin/subscriptions/bazaarsubscription/">مدیریت اشتراک‌ها <svg><use href="{% static 'cms/icons.svg' %}#arrow-left"></use></svg></a>
+        </div>
+        <div class="responsive-table">
+          <table>
+            <thead><tr><th>کاربر</th><th>شناسه محصول</th><th>انقضا</th><th>تمدید خودکار</th><th>وضعیت</th></tr></thead>
+            <tbody>
+              {% for row in latest_subscriptions %}
+              <tr>
+                <td><span class="table-title">{{ row.user.display_name|default:row.user.phone_number|default:row.user.email }}</span></td>
+                <td><code>{{ row.product_id }}</code></td>
+                <td>{{ row.expires_at|date:"Y/m/d - H:i" }}</td>
+                <td>{% if row.auto_renewing %}<span class="yes-no yes">فعال</span>{% else %}<span class="yes-no no">غیرفعال</span>{% endif %}</td>
+                <td><span class="status-badge status-{{ row.status|lower }}"><span></span>{{ row.status }}</span></td>
+              </tr>
+              {% empty %}<tr><td colspan="5"><div class="empty-state compact">هنوز خریدی ثبت نشده است.</div></td></tr>{% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer class="dashboard-footer">
+        <span>همراه‌مادر · پنل مدیریت</span>
+        <span>آخرین بروزرسانی صفحه: {{ now|date:"Y/m/d H:i" }}</span>
+      </footer>
+    </main>
+  </div>
 </body>
 </html>

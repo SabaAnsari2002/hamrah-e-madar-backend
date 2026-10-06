@@ -1,0 +1,60 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_modify %}
+{% block title %}{% if add %}افزودن{% else %}ویرایش{% endif %} {{ opts.verbose_name|capfirst }} | همراه‌مادر{% endblock %}
+{% block extrahead %}{{ block.super }}<script src="{% url 'admin:jsi18n' %}"></script>{{ media }}{% endblock %}
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static 'admin/css/forms.css' %}">{% endblock %}
+{% block coltype %}colM{% endblock %}
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-form hamrah-change-form{% endblock %}
+{% block content_title %}{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs hamrah-breadcrumbs">
+  <a href="{% url 'admin:index' %}">مدیریت</a><span>‹</span>
+  <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a><span>‹</span>
+  {% if has_view_permission %}<a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>{% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %}<span>‹</span>
+  <strong>{% if add %}افزودن{% else %}ویرایش{% endif %}</strong>
+</div>
+{% endblock %}
+{% endif %}
+
+{% block content %}
+<div id="content-main" class="hamrah-content-main">
+  <section class="hamrah-page-hero hamrah-form-hero">
+    <div class="hamrah-page-heading">
+      <span class="hamrah-page-icon">
+        <svg viewBox="0 0 24 24"><path d="m4 17.25-.75 3.5 3.5-.75L17.81 8.94l-2.75-2.75L4 17.25ZM20.71 6.04a1 1 0 0 0 0-1.41l-1.34-1.34a1 1 0 0 0-1.41 0l-1.66 1.66 2.75 2.75 1.66-1.66Z"/></svg>
+      </span>
+      <div>
+        <span class="hamrah-page-eyebrow">{{ opts.app_config.verbose_name }} / {{ opts.verbose_name_plural|capfirst }}</span>
+        <h1>{% if add %}افزودن {{ opts.verbose_name|capfirst }}{% else %}ویرایش {{ opts.verbose_name|capfirst }}{% endif %}</h1>
+        {% if not add and original %}<p class="hamrah-record-name">{{ original|truncatewords:"18" }}</p>{% else %}<p>اطلاعات رکورد جدید را تکمیل و ذخیره کنید.</p>{% endif %}
+      </div>
+    </div>
+    {% block object-tools %}
+    {% if change and not is_popup %}
+    <ul class="object-tools hamrah-object-tools">{% block object-tools-items %}{% change_form_object_tools %}{% endblock %}</ul>
+    {% endif %}
+    {% endblock %}
+  </section>
+
+  <form {% if has_file_field %}enctype="multipart/form-data" {% endif %}{% if form_url %}action="{{ form_url }}" {% endif %}method="post" id="{{ opts.model_name }}_form" class="hamrah-admin-form" novalidate>
+    {% csrf_token %}{% block form_top %}{% endblock %}
+    <div>
+      {% if is_popup %}<input type="hidden" name="{{ is_popup_var }}" value="1">{% endif %}
+      {% if to_field %}<input type="hidden" name="{{ to_field_var }}" value="{{ to_field }}">{% endif %}
+      {% if save_on_top %}{% block submit_buttons_top %}{% submit_row %}{% endblock %}{% endif %}
+      {% if errors %}<div class="hamrah-form-error"><strong>برخی فیلدها نیاز به اصلاح دارند.</strong>{{ adminform.form.non_field_errors }}</div>{% endif %}
+      <div class="hamrah-form-body">
+        {% block field_sets %}{% for fieldset in adminform %}{% include "admin/includes/fieldset.html" with heading_level=2 prefix="fieldset" id_prefix=0 id_suffix=forloop.counter0 %}{% endfor %}{% endblock %}
+        {% block after_field_sets %}{% endblock %}
+        {% block inline_field_sets %}{% for inline_admin_formset in inline_admin_formsets %}{% include inline_admin_formset.opts.template %}{% endfor %}{% endblock %}
+        {% block after_related_objects %}{% endblock %}
+      </div>
+      {% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
+      {% block admin_change_form_document_ready %}<script id="django-admin-form-add-constants" src="{% static 'admin/js/change_form.js' %}"{% if adminform and add %} data-model-name="{{ opts.model_name }}"{% endif %} async></script>{% endblock %}
+      {% prepopulated_fields_js %}
+    </div>
+  </form>
+</div>
+{% endblock %}

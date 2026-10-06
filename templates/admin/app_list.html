@@ -1,0 +1,30 @@
+{% load i18n %}
+{% if app_list %}
+  {% for app in app_list %}
+    <section class="hamrah-nav-group app-{{ app.app_label }}{% if app.app_url in request.path|urlencode %} current-app{% endif %}">
+      <a class="hamrah-nav-app" href="{{ app.app_url }}">
+        <span class="hamrah-nav-app-badge">{{ app.name|slice:":1"|upper }}</span>
+        <span class="hamrah-nav-app-copy"><strong>{{ app.name }}</strong><small>{{ app.models|length }} بخش</small></span>
+        <svg class="hamrah-nav-chevron" viewBox="0 0 24 24"><path d="m14.7 6.3-1.4-1.4L6.2 12l7.1 7.1 1.4-1.4L9 12l5.7-5.7Z"/></svg>
+      </a>
+      <div class="hamrah-nav-models">
+        {% for model in app.models %}
+          {% with model_name=model.object_name|lower %}
+          <div class="hamrah-nav-model-row model-{{ model_name }}{% if model.admin_url in request.path|urlencode %} current-model{% endif %}" data-nav-label="{{ model.name|lower }} {{ app.name|lower }}">
+            {% if model.admin_url %}
+              <a class="hamrah-nav-model-name" href="{{ model.admin_url }}"{% if model.admin_url in request.path|urlencode %} aria-current="page"{% endif %}>
+                <span class="hamrah-nav-dot"></span><span>{{ model.name }}</span>
+              </a>
+            {% else %}
+              <span class="hamrah-nav-model-name"><span class="hamrah-nav-dot"></span><span>{{ model.name }}</span></span>
+            {% endif %}
+            {% if model.add_url %}<a class="hamrah-nav-quick-add" href="{{ model.add_url }}" title="افزودن {{ model.name }}">+</a>{% endif %}
+          </div>
+          {% endwith %}
+        {% endfor %}
+      </div>
+    </section>
+  {% endfor %}
+{% else %}
+  <div class="hamrah-nav-empty">مجوز دسترسی به بخشی برای این حساب تعریف نشده است.</div>
+{% endif %}

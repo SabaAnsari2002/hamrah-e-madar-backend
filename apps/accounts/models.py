@@ -22,10 +22,10 @@ class UserManager(BaseUserManager):
     def create_user(self, phone_number, display_name='', password=None, **extra):
         if not phone_number:
             raise ValueError('phone_number is required')
+        extra.setdefault('auth_provider', User.AuthProvider.PHONE)
         user = self.model(
             phone_number=self.normalize_phone(phone_number),
             display_name=display_name.strip(),
-            auth_provider=User.AuthProvider.PHONE,
             **extra,
         )
         if password:

@@ -1,6 +1,59 @@
 {% extends "admin/base.html" %}
-{% load static %}
-{% block title %}Hamrah-e-Madar Admin{% endblock %}
-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static 'admin/css/hamrah_admin.css' %}">{% endblock %}
-{% block branding %}<h1 id="site-name"><a href="/cms/">Hamrah-e-Madar CMS</a></h1>{% endblock %}
-{% block nav-global %}<div class="hamrah-links"><a href="/cms/">Dashboard</a></div>{% endblock %}
+{% load i18n static %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | همراه‌مادر{% endblock %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'admin/css/hamrah_admin.css' %}">
+{% endblock %}
+
+{% block extrahead %}
+  {{ block.super }}
+  <script src="{% static 'admin/js/hamrah_admin.js' %}" defer></script>
+{% endblock %}
+
+{% block branding %}
+<a class="hamrah-admin-brand" href="{% url 'admin:index' %}">
+  <span class="hamrah-admin-logo" aria-hidden="true">
+    <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.35-9.33-8.06C.36 9.28 2.1 5 6.2 5c2.08 0 3.35 1.14 3.8 2 .45-.86 1.72-2 3.8-2 4.1 0 5.84 4.28 3.53 7.94C19 16.65 12 21 12 21Z"/></svg>
+  </span>
+  <span class="hamrah-brand-copy">
+    <strong>همراه‌مادر</strong>
+    <small>پنل مدیریت سامانه</small>
+  </span>
+</a>
+{% endblock %}
+
+{% block usertools %}
+{% if has_permission %}
+<div id="user-tools" class="hamrah-user-tools">
+  <a class="hamrah-header-action hamrah-cms-link" href="/cms/">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4V4Zm9 0h7v4h-7V4ZM4 13h7v7H4v-7Zm9-3h7v10h-7V10Z"/></svg>
+    <span>داشبورد CMS</span>
+  </a>
+  <span class="hamrah-header-divider"></span>
+  <div class="hamrah-user-chip">
+    <span class="hamrah-user-avatar">{% firstof user.get_short_name user.get_username|slice:":1" %}</span>
+    <span class="hamrah-user-copy">
+      <small>حساب مدیر</small>
+      <strong>{% firstof user.get_short_name user.get_username %}</strong>
+    </span>
+  </div>
+  {% if user.has_usable_password %}
+  <a class="hamrah-icon-button" href="{% url 'admin:password_change' %}" title="تغییر رمز عبور" aria-label="تغییر رمز عبور">
+    <svg viewBox="0 0 24 24"><path d="M17 8h-1V6a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2Zm-7-2a2 2 0 1 1 4 0v2h-4V6Zm3 10.73V18h-2v-1.27a2 2 0 1 1 2 0Z"/></svg>
+  </a>
+  {% endif %}
+  {% include "admin/color_theme_toggle.html" %}
+  <form id="logout-form" method="post" action="{% url 'admin:logout' %}">
+    {% csrf_token %}
+    <button class="hamrah-icon-button hamrah-logout-button" type="submit" title="خروج" aria-label="خروج">
+      <svg viewBox="0 0 24 24"><path d="M10 17v-2h4V9h-4V7l-5 5 5 5Zm8-14H8a2 2 0 0 0-2 2v2h2V5h10v14H8v-2H6v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2Z"/></svg>
+    </button>
+  </form>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

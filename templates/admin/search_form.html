@@ -1,0 +1,15 @@
+{% load i18n static %}
+{% if cl.search_fields %}
+<div id="toolbar" class="hamrah-search-toolbar">
+  <form id="changelist-search" method="get" role="search">
+    <div class="hamrah-search-box">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 19-5.2-5.2A7 7 0 1 0 14.4 15L19.6 20.2 21 19ZM5 9a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z"/></svg>
+      <input type="text" name="{{ search_var }}" value="{{ cl.query }}" id="searchbar" placeholder="جستجو در {{ cl.opts.verbose_name_plural|capfirst }}…"{% if cl.search_help_text %} aria-describedby="searchbar_helptext"{% endif %}>
+      <button type="submit">جستجو</button>
+    </div>
+    {% if show_result_count %}<span class="hamrah-search-meta"><strong>{{ cl.result_count }}</strong> نتیجه {% if cl.show_full_result_count %}از {{ cl.full_result_count }} رکورد{% endif %}</span>{% endif %}
+    {% for pair in cl.params.items %}{% if pair.0 != search_var %}<input type="hidden" name="{{ pair.0 }}" value="{{ pair.1 }}">{% endif %}{% endfor %}
+    {% if cl.search_help_text %}<div class="help" id="searchbar_helptext">{{ cl.search_help_text }}</div>{% endif %}
+  </form>
+</div>
+{% endif %}
